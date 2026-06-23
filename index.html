@@ -5,25 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0f172a">
     <title>Return to BC Road Trip</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="">
     <style>
-      :root { color-scheme: light; --bg: #f6f7f4; --ink: #172033; --muted: #647083; --panel: #ffffff; --line: #dce2ea; --accent: #1f6f68; --accent-strong: #174f4b; --green: #2f8f59; --yellow: #c98a1d; --blue: #2d6fb7; --red: #b44747; --gray: #6b7280; --soft: #edf4f2; --shadow: 0 16px 42px rgba(15, 23, 42, 0.1); }
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f4;
+        --ink: #172033;
+        --muted: #647083;
+        --panel: #ffffff;
+        --line: #dce2ea;
+        --accent: #1f6f68;
+        --accent-strong: #174f4b;
+        --green: #2f8f59;
+        --yellow: #c98a1d;
+        --blue: #2d6fb7;
+        --red: #b44747;
+        --gray: #6b7280;
+        --soft: #edf4f2;
+        --shadow: 0 16px 42px rgba(15, 23, 42, 0.1);
+      }
+
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
-      body { margin: 0; background: var(--bg); color: var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.45; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.45;
+      }
       a { color: inherit; }
       .shell { max-width: 1120px; margin: 0 auto; padding: 18px; }
-      .hero { background: linear-gradient(135deg, #10213b 0%, #174f4b 100%); color: #fff; border-radius: 8px; padding: 24px; box-shadow: var(--shadow); }
-      .eyebrow { margin: 0 0 5px; color: var(--muted); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+      .hero {
+        background: linear-gradient(135deg, #10213b 0%, #174f4b 100%);
+        color: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+      .eyebrow {
+        margin: 0 0 5px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
       .hero .eyebrow { color: rgba(255, 255, 255, 0.72); }
       .hero h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 4rem); line-height: 0.98; letter-spacing: 0; }
       .hero p { margin: 0; max-width: 58rem; color: rgba(255, 255, 255, 0.86); }
       .hero-grid { display: grid; gap: 16px; margin-top: 22px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      .hero-stat { border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 12px; background: rgba(255, 255, 255, 0.08); }
+      .hero-stat {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.08);
+      }
       .hero-stat b { display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.7); }
       .hero-stat span { display: block; margin-top: 4px; font-weight: 700; }
+
       nav { display: flex; gap: 8px; margin: 16px 0; overflow-x: auto; padding-bottom: 4px; }
-      nav a, .actions a, .filter { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 14px; border-radius: 8px; background: var(--panel); border: 1px solid var(--line); text-decoration: none; white-space: nowrap; font-weight: 700; }
+      nav a, .actions a, .filter {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        text-decoration: none;
+        white-space: nowrap;
+        font-weight: 700;
+      }
       nav a:focus, .actions a:focus { outline: 3px solid #9ed7d1; outline-offset: 2px; }
       section { margin: 20px 0; }
       .section-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
@@ -32,10 +90,28 @@
       .note { color: var(--muted); margin: 4px 0 0; }
       .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .route-list { display: grid; gap: 12px; }
-      .route-card, .hotel-card, .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+      .route-card, .hotel-card, .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+      }
       .route-card, .hotel-card { box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
       .route-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
-      .pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 5px 9px; background: var(--soft); color: var(--accent-strong); border: 1px solid #cfe3df; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 5px 9px;
+        background: var(--soft);
+        color: var(--accent-strong);
+        border: 1px solid #cfe3df;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
       .pill.gray { background: #f2f3f5; border-color: #dcdfe5; color: var(--gray); }
       .pill.green { background: #ebf6ef; border-color: #c7e5d0; color: var(--green); }
       .pill.yellow { background: #fff8e8; border-color: #ead8aa; color: #8a5a00; }
@@ -49,13 +125,30 @@
       .actions a:first-child { background: var(--accent); border-color: var(--accent); color: #fff; }
       .check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
       .check-list li { display: flex; align-items: start; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
-      .check-list li::before { content: ""; width: 10px; height: 10px; margin-top: 7px; border-radius: 999px; background: var(--accent); flex: 0 0 auto; }
+      .check-list li::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        margin-top: 7px;
+        border-radius: 999px;
+        background: var(--accent);
+        flex: 0 0 auto;
+      }
       table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
       th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
       th { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
       tr:last-child td { border-bottom: 0; }
       .footer { color: var(--muted); font-size: 0.9rem; padding: 16px 0 32px; }
-      #trip-map { width: 100%; height: min(66vh, 560px); min-height: 360px; border-radius: 8px; border: 1px solid var(--line); overflow: hidden; background: #dce2ea; }
+
+      #trip-map {
+        width: 100%;
+        height: min(66vh, 560px);
+        min-height: 360px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        background: #dce2ea;
+      }
       .map-panel { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 12px; align-items: stretch; }
       .map-side { display: flex; flex-direction: column; gap: 12px; }
       .filters { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -69,30 +162,169 @@
       .dot.blue, .marker.blue { background: var(--blue); }
       .dot.red, .marker.red { background: var(--red); }
       .dot.gray, .marker.gray { background: var(--gray); }
-      .marker { width: 22px; height: 22px; border: 3px solid #fff; border-radius: 999px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3); }
+      .marker {
+        width: 22px;
+        height: 22px;
+        border: 3px solid #fff;
+        border-radius: 999px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+      }
       .popup-title { margin: 0 0 6px; font-weight: 800; }
       .popup-note { margin: 0 0 8px; color: #475569; }
       .popup-link { color: var(--accent-strong); font-weight: 800; }
-      @media (max-width: 820px) { .shell { padding: 12px; } .hero { padding: 20px; } .hero-grid, .grid, .map-panel { grid-template-columns: 1fr; } .section-head { align-items: start; flex-direction: column; } .route-top { flex-direction: column; } .facts div { grid-template-columns: 1fr; gap: 2px; } table, thead, tbody, th, td, tr { display: block; } thead { display: none; } tr { border-bottom: 1px solid var(--line); padding: 8px 0; } td { border: 0; padding: 8px 12px; } td::before { display: block; color: var(--muted); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; } td:nth-child(1)::before { content: "Criterion"; } td:nth-child(2)::before { content: "Weight"; } td:nth-child(3)::before { content: "Detail"; } }
+
+      @media (max-width: 820px) {
+        .shell { padding: 12px; }
+        .hero { padding: 20px; }
+        .hero-grid, .grid, .map-panel { grid-template-columns: 1fr; }
+        .section-head { align-items: start; flex-direction: column; }
+        .route-top { flex-direction: column; }
+        .facts div { grid-template-columns: 1fr; gap: 2px; }
+        table, thead, tbody, th, td, tr { display: block; }
+        thead { display: none; }
+        tr { border-bottom: 1px solid var(--line); padding: 8px 0; }
+        td { border: 0; padding: 8px 12px; }
+        td::before { display: block; color: var(--muted); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
+        td:nth-child(1)::before { content: "Criterion"; }
+        td:nth-child(2)::before { content: "Weight"; }
+        td:nth-child(3)::before { content: "Detail"; }
+      }
     </style>
   </head>
   <body>
     <main class="shell">
-      <header class="hero"><p class="eyebrow">Custom map data is now the source of truth</p><h1>Return to BC Road Trip</h1><p>Trabuco Canyon area to Vancouver, BC</p><div class="hero-grid"><div class="hero-stat"><b>Departure</b><span>Target departure: July 28, 2026</span></div><div class="hero-stat"><b>Arrival</b><span>Flexible arrival: about two weeks later</span></div><div class="hero-stat"><b>Travelers</b><span>Tyler, Stephanie, and one senior 22 lb dog</span></div><div class="hero-stat"><b>Driving Pace</b><span>About 4 hr/day, flexible</span></div></div></header>
-      <nav aria-label="Page sections"><a href="#map">Map</a><a href="#route">Route Spine</a><a href="#hotels">Hotel Slots</a><a href="#rubric">Decision Rubric</a><a href="#calls">Call Script</a></nav>
-      <section id="map"><div class="section-head"><div><h2>Editable Map Brain</h2><p class="note">Pins and route lines come from data in this page, so I can update the map as we lock decisions.</p></div><div class="filters" aria-label="Map filters"><label class="filter"><input type="checkbox" data-layer="route" checked> Route</label><label class="filter"><input type="checkbox" data-layer="hotel" checked> Hotels</label><label class="filter"><input type="checkbox" data-layer="dog" checked> Dog</label><label class="filter"><input type="checkbox" data-layer="avoid" checked> Avoid</label></div></div><div class="map-panel"><article class="panel"><div id="trip-map" role="application" aria-label="Return to BC road trip map"></div><div class="actions"><a href="https://www.google.com/maps/dir/Trabuco+Canyon,+CA/Vancouver,+BC" target="_blank" rel="noreferrer">Open Google Route</a><a href="https://www.openstreetmap.org/#map=5/40.3/-120.5" target="_blank" rel="noreferrer">Open OSM</a></div></article><div class="map-side"><article class="panel"><h3>Map Status</h3><p class="note">This is now our editable map. Additions happen by updating the route/hotel data, not by hand-editing Google My Maps.</p><div class="legend"><div class="legend-row"><span class="dot green"></span><span>Preferred / locked</span></div><div class="legend-row"><span class="dot yellow"></span><span>Candidate / backup</span></div><div class="legend-row"><span class="dot blue"></span><span>Dog stop / useful errand</span></div><div class="legend-row"><span class="dot red"></span><span>Avoid / concern</span></div><div class="legend-row"><span class="dot gray"></span><span>Placeholder / undecided</span></div></div></article><article class="panel"><h3>Privacy Rule</h3><p>Keep exact home address, confirmation numbers, and sensitive car details out of the public page.</p></article></div></div></section>
-      <section id="route"><div class="section-head"><div><h2>Route Spine</h2><p class="note">Provisional overnight zones. Final stops will move once the must-hit destinations arrive.</p></div></div><div id="route-list" class="route-list"></div></section>
-      <section id="hotels"><div class="section-head"><div><h2>Hotel Research Slots</h2><p class="note">Each slot becomes a best pick plus backups, with booking links and pet/parking notes.</p></div></div><div id="hotel-list" class="grid"></div></section>
-      <section id="rubric"><div class="section-head"><div><h2>Decision Rubric</h2><p class="note">This keeps hotel decisions consistent when there are too many almost-good options.</p></div></div><table><thead><tr><th>Criterion</th><th>Weight</th><th>Detail</th></tr></thead><tbody><tr><td>Dog policy confirmed</td><td><span class="pill green">Must pass</span></td><td>Accepts one 22 lb dog, fee known, no surprise breed or room restrictions.</td></tr><tr><td>Parking security</td><td><span class="pill green">Very high</span></td><td>Garage, gated, monitored, visible from lobby, or strong recent parking reviews.</td></tr><tr><td>Area safety</td><td><span class="pill green">Very high</span></td><td>Safer suburb or district; no pattern of car-break-in complaints in recent reviews.</td></tr><tr><td>Room comfort</td><td><span class="pill yellow">High</span></td><td>Quiet, clean, interior corridors preferred, reliable AC, elevator if needed.</td></tr><tr><td>Kitchen/laundry</td><td><span class="pill yellow">Medium</span></td><td>Kitchenette or laundry every other stop when route allows.</td></tr><tr><td>Price</td><td><span class="pill gray">Low</span></td><td>Use as a tiebreaker after safety, dog policy, and comfort.</td></tr></tbody></table></section>
-      <section id="calls" class="grid"><article class="panel"><h2>Hotel Call Script</h2><p class="note">Use this before booking anything that will hold the car overnight.</p><ol><li>Can you confirm you allow one 22 lb dog for these dates?</li><li>What is the total pet fee, and are there room-type restrictions?</li><li>Is parking gated, garage, monitored, or visible to the front desk?</li><li>Have you had recent vehicle break-in issues on or near the property?</li><li>Can we request a room that makes dog walks and luggage access easier?</li></ol></article><article class="panel"><h2>What Gets Added Next</h2><p>Once the destination list arrives, this page gets exact stop candidates, preferred hotels, backup hotels, direct booking links, map links, phone numbers, pet fees, parking notes, and booking status.</p><p class="note">Final BC arrival remains flexible until temporary housing is locked.</p></article></section>
-      <p class="footer">Version 0.4 | Custom map data. Sensitive details should stay out of the public page.</p>
+      <header class="hero">
+        <p class="eyebrow">Custom map data is now the source of truth</p>
+        <h1>Return to BC Road Trip</h1>
+        <p>Trabuco Canyon area to Vancouver, BC</p>
+        <div class="hero-grid">
+          <div class="hero-stat"><b>Departure</b><span>Target departure: July 28, 2026</span></div>
+          <div class="hero-stat"><b>Arrival</b><span>Flexible arrival: about two weeks later</span></div>
+          <div class="hero-stat"><b>Travelers</b><span>Tyler, Stephanie, and one senior 22 lb dog</span></div>
+          <div class="hero-stat"><b>Driving Pace</b><span>About 4 hr/day, flexible</span></div>
+        </div>
+      </header>
+
+      <nav aria-label="Page sections">
+        <a href="#map">Map</a>
+        <a href="#route">Route Spine</a>
+        <a href="#hotels">Hotel Candidates</a>
+        <a href="#rubric">Decision Rubric</a>
+        <a href="#calls">Call Script</a>
+      </nav>
+
+      <section id="map">
+        <div class="section-head">
+          <div>
+            <h2>Editable Map Brain</h2>
+            <p class="note">Pins and route lines come from data in this page, so I can update the map as we lock decisions.</p>
+          </div>
+          <div class="filters" aria-label="Map filters">
+            <label class="filter"><input type="checkbox" data-layer="route" checked> Route</label>
+            <label class="filter"><input type="checkbox" data-layer="hotel" checked> Hotels</label>
+            <label class="filter"><input type="checkbox" data-layer="dog" checked> Dog</label>
+            <label class="filter"><input type="checkbox" data-layer="avoid" checked> Avoid</label>
+          </div>
+        </div>
+        <div class="map-panel">
+          <article class="panel">
+            <div id="trip-map" role="application" aria-label="Return to BC road trip map"></div>
+            <div class="actions">
+              <a href="https://www.google.com/maps/dir/Trabuco+Canyon,+CA/Vancouver,+BC" target="_blank" rel="noreferrer">Open Google Route</a>
+              <a href="https://www.openstreetmap.org/#map=5/40.3/-120.5" target="_blank" rel="noreferrer">Open OSM</a>
+            </div>
+          </article>
+          <div class="map-side">
+            <article class="panel">
+              <h3>Map Status</h3>
+              <p class="note">This is now our editable map. Additions happen by updating the route/hotel data, not by hand-editing Google My Maps.</p>
+              <div class="legend">
+                <div class="legend-row"><span class="dot green"></span><span>Preferred / locked</span></div>
+                <div class="legend-row"><span class="dot yellow"></span><span>Candidate / backup</span></div>
+                <div class="legend-row"><span class="dot blue"></span><span>Dog stop / useful errand</span></div>
+                <div class="legend-row"><span class="dot red"></span><span>Avoid / concern</span></div>
+                <div class="legend-row"><span class="dot gray"></span><span>Placeholder / undecided</span></div>
+              </div>
+            </article>
+            <article class="panel">
+              <h3>Privacy Rule</h3>
+              <p>Keep exact home address, confirmation numbers, and sensitive car details out of the public page.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="route">
+        <div class="section-head">
+          <div>
+            <h2>Route Spine</h2>
+            <p class="note">Provisional overnight zones. Final stops will move once the must-hit destinations arrive.</p>
+          </div>
+        </div>
+        <div id="route-list" class="route-list"></div>
+      </section>
+
+      <section id="hotels">
+        <div class="section-head">
+          <div>
+            <h2>First Hotel Candidates</h2>
+            <p class="note">First-pass picks at the end of each leg. Verify pet policy and parking by phone before booking.</p>
+          </div>
+        </div>
+        <div id="hotel-list" class="grid"></div>
+      </section>
+
+      <section id="rubric">
+        <div class="section-head">
+          <div>
+            <h2>Decision Rubric</h2>
+            <p class="note">This keeps hotel decisions consistent when there are too many almost-good options.</p>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Criterion</th><th>Weight</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Dog policy confirmed</td><td><span class="pill green">Must pass</span></td><td>Accepts one 22 lb dog, fee known, no surprise breed or room restrictions.</td></tr>
+            <tr><td>Parking security</td><td><span class="pill green">Very high</span></td><td>Garage, gated, monitored, visible from lobby, or strong recent parking reviews.</td></tr>
+            <tr><td>Area safety</td><td><span class="pill green">Very high</span></td><td>Safer suburb or district; no pattern of car-break-in complaints in recent reviews.</td></tr>
+            <tr><td>Room comfort</td><td><span class="pill yellow">High</span></td><td>Quiet, clean, interior corridors preferred, reliable AC, elevator if needed.</td></tr>
+            <tr><td>Kitchen/laundry</td><td><span class="pill yellow">Medium</span></td><td>Kitchenette or laundry every other stop when route allows.</td></tr>
+            <tr><td>Price</td><td><span class="pill gray">Low</span></td><td>Use as a tiebreaker after safety, dog policy, and comfort.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="calls" class="grid">
+        <article class="panel">
+          <h2>Hotel Call Script</h2>
+          <p class="note">Use this before booking anything that will hold the car overnight.</p>
+          <ol>
+            <li>Can you confirm you allow one 22 lb dog for these dates?</li>
+            <li>What is the total pet fee, and are there room-type restrictions?</li>
+            <li>Is parking gated, garage, monitored, or visible to the front desk?</li>
+            <li>Have you had recent vehicle break-in issues on or near the property?</li>
+            <li>Can we request a room that makes dog walks and luggage access easier?</li>
+          </ol>
+        </article>
+        <article class="panel">
+          <h2>What Gets Added Next</h2>
+          <p>Once the destination list arrives, this page gets exact stop candidates, preferred hotels, backup hotels, phone numbers, pet fees, parking notes, and booking status.</p>
+          <p class="note">Final BC arrival remains flexible until temporary housing is locked.</p>
+        </article>
+      </section>
+
+      <p class="footer">Version 0.5 | First hotel candidates added. Sensitive details should stay out of the public page.</p>
     </main>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""></script>
     <script>
       const routeStops = [
         { id: "start", layer: "route", color: "gray", label: "Trabuco Canyon area", date: "Tue Jul 28", drive: "Start", overnight: "Departure", coords: [33.6606, -117.5867], note: "Use area-level location only for privacy." },
-        { id: "central-ca", layer: "route", color: "gray", label: "Southern/Central CA staging zone", date: "Tue Jul 28", drive: "3.5-5.0 hr", overnight: "Valencia, Santa Clarita, Bakersfield, or Clovis", coords: [34.3917, -118.5426], note: "First day should be deliberately easy unless the final destination list pulls us farther north." },
-        { id: "sacramento", layer: "route", color: "gray", label: "Sacramento / Roseville / Davis zone", date: "Jul 29-30", drive: "3.5-5.0 hr", overnight: "Safer suburb or suite hotel near I-5/99 access", coords: [38.5816, -121.4944], note: "Good candidate for a kitchenette night and laundry reset." },
+        { id: "central-ca", layer: "route", color: "gray", label: "Clovis / Fresno staging zone", date: "Tue Jul 28", drive: "4.0-5.0 hr", overnight: "Clovis or northeast Fresno", coords: [36.8252, -119.7029], note: "Best first-pass fit for a real driving day. Valencia remains a short-day fallback if departure day runs late." },
+        { id: "sacramento", layer: "route", color: "gray", label: "Sacramento / Roseville / Davis zone", date: "Jul 29-30", drive: "3.0-4.0 hr", overnight: "Roseville or Rocklin", coords: [38.7521, -121.2880], note: "Good candidate for a safer suburb with highway access and a lighter second day." },
         { id: "redding", layer: "route", color: "gray", label: "Redding / Mt. Shasta zone", date: "Jul 30-31", drive: "3.0-4.5 hr", overnight: "Redding, Anderson, or Mt. Shasta", coords: [40.5865, -122.3917], note: "Useful split before crossing into Oregon. Parking quality matters here." },
         { id: "ashland", layer: "route", color: "gray", label: "Ashland / Medford zone", date: "Aug 1-ish", drive: "3.0-4.5 hr", overnight: "Ashland or Medford", coords: [42.1946, -122.7095], note: "Ashland may be more pleasant if lodging and parking check out." },
         { id: "eugene", layer: "route", color: "gray", label: "Willamette Valley zone", date: "Aug 2-ish", drive: "3.0-4.5 hr", overnight: "Eugene, Springfield, Corvallis, or Salem", coords: [44.0521, -123.0868], note: "Good area for a lighter day and dog-friendly walks." },
@@ -100,34 +332,337 @@
         { id: "bellingham", layer: "route", color: "gray", label: "Puget Sound / Bellingham zone", date: "Aug 5-7", drive: "3.0-5.0 hr", overnight: "Olympia, Eastside, Everett, or Bellingham", coords: [48.7519, -122.4787], note: "Potential buffer day before the border, depending on temporary housing timing." },
         { id: "vancouver", layer: "route", color: "red", label: "Vancouver, BC", date: "Flexible", drive: "1.5-3.5 hr plus border", overnight: "Temporary housing or first BC hotel", coords: [49.2827, -123.1207], note: "Do not lock final arrival until temporary housing is secured." }
       ];
+
       const hotelSlots = [
-        { zone: "Central CA", coords: [34.3917, -118.5426], color: "yellow", target: "Suite-style chain, safer suburb, easy highway access", kitchen: "Preferred", parking: "Well-lit lot or controlled parking; avoid exposed motel-style lots", status: "research next" },
-        { zone: "Sacramento / Roseville / Davis", coords: [38.7521, -121.2880], color: "yellow", target: "Residence Inn, Hyatt House, Homewood Suites, Element, or nicer pet-friendly hotel", kitchen: "Strongly preferred", parking: "Garage or highly visible hotel lot preferred", status: "research next" },
-        { zone: "Redding / Mt. Shasta", coords: [40.5865, -122.3917], color: "yellow", target: "Safer property with easy dog relief area", kitchen: "Nice to have", parking: "Call to ask about security cameras and overnight monitoring", status: "research next" },
-        { zone: "Ashland / Medford", coords: [42.3265, -122.8756], color: "yellow", target: "Nicer dog-friendly hotel; avoid weak parking setups", kitchen: "Optional", parking: "Prefer interior corridors and visible parking", status: "research next" },
-        { zone: "Eugene / Corvallis / Salem", coords: [44.0521, -123.0868], color: "yellow", target: "Kitchenette reset night if available", kitchen: "Preferred", parking: "Well-reviewed area and visible overnight parking", status: "research next" },
-        { zone: "Portland area", coords: [45.3977, -122.2615], color: "yellow", target: "Safer suburb over downtown unless parking is secured", kitchen: "Optional", parking: "Secure garage or controlled access is a major plus", status: "research next" },
-        { zone: "Puget Sound / Bellingham", coords: [48.7519, -122.4787], color: "yellow", target: "Final US-side buffer hotel before border", kitchen: "Optional", parking: "Secure parking and easy morning departure", status: "research next" }
+        {
+          leg: "Leg 1",
+          zone: "Clovis / Fresno",
+          name: "Residence Inn Fresno Clovis",
+          role: "Primary",
+          coords: [36.8379, -119.7047],
+          color: "green",
+          dog: "Dog-friendly; published limit fits a 22 lb dog. Confirm fee and room type.",
+          kitchen: "Yes - suite setup.",
+          parking: "On-site parking. Call to ask about camera coverage and best visible parking area.",
+          reason: "Best first-pass balance for a 4-5 hour first day, dog fit, and kitchen reset.",
+          status: "call to verify",
+          url: "https://www.marriott.com/en-us/hotels/fatri-residence-inn-fresno-clovis/overview/"
+        },
+        {
+          leg: "Leg 1 fallback",
+          zone: "Valencia / Santa Clarita",
+          name: "Hyatt Regency Valencia",
+          role: "Short-day fallback",
+          coords: [34.4177, -118.5627],
+          color: "yellow",
+          dog: "Dog-friendly for one 22 lb dog under published Hyatt limits.",
+          kitchen: "No.",
+          parking: "Covered garage adjacent to lobby; paid overnight parking.",
+          reason: "Use this if departure day is messy and we only want a shorter first drive with stronger parking.",
+          status: "fallback",
+          url: "https://www.hyatt.com/hyatt-regency/en-US/valen-hyatt-regency-valencia"
+        },
+        {
+          leg: "Leg 2",
+          zone: "Roseville / Rocklin",
+          name: "Hyatt Place Sacramento / Roseville",
+          role: "Primary",
+          coords: [38.7695, -121.2689],
+          color: "green",
+          dog: "Dog-friendly for one 22 lb dog under published Hyatt limits.",
+          kitchen: "No full kitchen.",
+          parking: "Complimentary lot adjacent to hotel. Call about camera coverage and safest side of lot.",
+          reason: "Roseville is a practical safer-suburb stop with easy access for the next northbound leg.",
+          status: "call to verify",
+          url: "https://www.hyatt.com/hyatt-place/en-US/saczr-hyatt-place-sacramento-roseville"
+        },
+        {
+          leg: "Leg 2 backup",
+          zone: "Roseville / Rocklin",
+          name: "Staybridge Suites Rocklin - Roseville Area",
+          role: "Kitchen backup",
+          coords: [38.8122, -121.2907],
+          color: "yellow",
+          dog: "Pet-friendly chain; confirm current dog fee and any room restrictions.",
+          kitchen: "Yes - extended-stay suites.",
+          parking: "On-site lot. Call for lighting, cameras, and front-desk visibility.",
+          reason: "Backup if we want a kitchen/laundry-style reset instead of the Hyatt Place.",
+          status: "research backup",
+          url: "https://www.ihg.com/staybridge/hotels/us/en/rocklin/sacrb/hoteldetail"
+        },
+        {
+          leg: "Leg 3",
+          zone: "Redding",
+          name: "Sheraton Redding Hotel at the Sundial Bridge",
+          role: "Primary",
+          coords: [40.5914, -122.3779],
+          color: "green",
+          dog: "Dog-friendly for one 22 lb dog under published Marriott limits.",
+          kitchen: "No.",
+          parking: "On-site paid parking; call about overnight patrol/camera coverage.",
+          reason: "Nicer property with good dog-walk access around the river/Sundial Bridge area.",
+          status: "call to verify",
+          url: "https://www.marriott.com/en-us/hotels/rddsi-sheraton-redding-hotel-at-the-sundial-bridge/overview/"
+        },
+        {
+          leg: "Leg 3 backup",
+          zone: "Redding",
+          name: "Home2 Suites by Hilton Redding",
+          role: "Kitchen backup",
+          coords: [40.6488, -122.3672],
+          color: "yellow",
+          dog: "Dog-friendly under published Hilton weight limits.",
+          kitchen: "Yes - in-room kitchenette.",
+          parking: "Complimentary uncovered self-parking; secured/covered parking not listed.",
+          reason: "Better if we need a kitchen and laundry night, weaker if parking security is the deciding factor.",
+          status: "research backup",
+          url: "https://www.hilton.com/en/hotels/rddhtht-home2-suites-redding/"
+        },
+        {
+          leg: "Leg 4",
+          zone: "Ashland",
+          name: "Lithia Springs Resort",
+          role: "Primary",
+          coords: [42.2009, -122.7339],
+          color: "green",
+          dog: "Pet-friendly rooms available; confirm exact room class and fee.",
+          kitchen: "Some suites/cottages may have more space; confirm room setup.",
+          parking: "Likely surface parking near rooms; call about lighting, cameras, and best building.",
+          reason: "More relaxed, lower-density option that should be easier with the dog and packed car than a downtown hotel.",
+          status: "call to verify",
+          url: "https://lithiaspringsresort.com/"
+        },
+        {
+          leg: "Leg 4 backup",
+          zone: "Ashland",
+          name: "Ashland Springs Hotel",
+          role: "Boutique backup",
+          coords: [42.1951, -122.7136],
+          color: "yellow",
+          dog: "Pet-friendly with restrictions; confirm allowed room type and fee.",
+          kitchen: "No.",
+          parking: "Free self-parking is reported, but security needs a phone check.",
+          reason: "Good downtown comfort backup if parking checks out and the room type accepts the dog.",
+          status: "research backup",
+          url: "https://www.ashlandspringshotel.com/"
+        },
+        {
+          leg: "Leg 5",
+          zone: "Eugene",
+          name: "Hyatt Place Eugene / Oakway Center",
+          role: "Primary",
+          coords: [44.0666, -123.0756],
+          color: "green",
+          dog: "Dog-friendly for one 22 lb dog under published Hyatt limits.",
+          kitchen: "No full kitchen.",
+          parking: "Parking garage setup; confirm overnight access, cameras, and Forester clearance.",
+          reason: "Good Eugene-area comfort stop with stronger parking potential than many surface-lot hotels.",
+          status: "call to verify",
+          url: "https://www.hyatt.com/hyatt-place/en-US/eugzo-hyatt-place-eugene-oakway-center"
+        },
+        {
+          leg: "Leg 5 backup",
+          zone: "Eugene / Springfield",
+          name: "Residence Inn Eugene Springfield",
+          role: "Kitchen backup",
+          coords: [44.0590, -123.0777],
+          color: "yellow",
+          dog: "Dog-friendly under published Marriott limits; confirm current fee.",
+          kitchen: "Yes - suite setup.",
+          parking: "On-site surface lot. Call about lighting, cameras, and front-desk visibility.",
+          reason: "Use if we need a kitchen/laundry-style stop instead of the Hyatt Place.",
+          status: "research backup",
+          url: "https://www.marriott.com/en-us/hotels/eugri-residence-inn-eugene-springfield/overview/"
+        },
+        {
+          leg: "Leg 6",
+          zone: "Lake Oswego / Portland outskirts",
+          name: "Hilton Garden Inn Portland / Lake Oswego",
+          role: "Primary",
+          coords: [45.4196, -122.7400],
+          color: "green",
+          dog: "Pet-friendly; confirm current fee and any room restrictions.",
+          kitchen: "No full kitchen.",
+          parking: "Covered/garage-style parking is the reason to call this first.",
+          reason: "Safer-suburb Portland-area stop without needing to sleep downtown with a packed car.",
+          status: "call to verify",
+          url: "https://www.hilton.com/en/hotels/pdxlogi-hilton-garden-inn-portland-lake-oswego/"
+        },
+        {
+          leg: "Leg 6 backup",
+          zone: "Lake Oswego / Portland outskirts",
+          name: "Residence Inn Portland South / Lake Oswego",
+          role: "Kitchen backup",
+          coords: [45.4208, -122.7432],
+          color: "yellow",
+          dog: "Dog-friendly under published Marriott limits; confirm current fee.",
+          kitchen: "Yes - suite setup.",
+          parking: "On-site surface lot. Call about lighting/cameras because this is not the strongest parking option.",
+          reason: "Backup if kitchen matters more than covered parking for this night.",
+          status: "research backup",
+          url: "https://www.marriott.com/en-us/hotels/pdxlo-residence-inn-portland-south-lake-oswego/overview/"
+        },
+        {
+          leg: "Leg 7",
+          zone: "Bellingham",
+          name: "TownePlace Suites Bellingham",
+          role: "Primary",
+          coords: [48.7874, -122.4938],
+          color: "green",
+          dog: "Dog-friendly for one 22 lb dog under published Marriott limits.",
+          kitchen: "Yes - suite setup.",
+          parking: "On-site garage/covered-style parking; confirm clearance with the loaded Forester.",
+          reason: "Strong final US-side buffer because it combines kitchen, dog fit, and better parking potential.",
+          status: "call to verify",
+          url: "https://www.marriott.com/en-us/hotels/blits-towneplace-suites-bellingham/overview/"
+        },
+        {
+          leg: "Leg 7 backup",
+          zone: "Bellingham",
+          name: "Hotel Bellwether",
+          role: "Nicer backup",
+          coords: [48.7544, -122.5001],
+          color: "yellow",
+          dog: "Dog-friendly rooms available; confirm fee, room class, and dog rules.",
+          kitchen: "No full kitchen.",
+          parking: "Call directly about overnight security before booking with a packed car.",
+          reason: "Higher-comfort backup if we decide the final US night should be nicer and parking checks out.",
+          status: "research backup",
+          url: "https://hotelbellwether.com/"
+        }
       ];
-      const extraMapPoints = [{ id: "dog-placeholder", layer: "dog", color: "blue", label: "Dog stop placeholders", coords: [44.8, -122.9], note: "Add specific parks/rest areas once overnight towns are chosen." }];
-      const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+
+      const extraMapPoints = [
+        { id: "dog-placeholder", layer: "dog", color: "blue", label: "Dog stop placeholders", coords: [44.8, -122.9], note: "Add specific parks/rest areas once overnight towns are chosen." }
+      ];
+
+      const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+
       const mapsSearchUrl = (label) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(label)}`;
-      function renderRouteCards() { document.querySelector("#route-list").innerHTML = routeStops.slice(1).map((stop, index) => `<article class="route-card"><div class="route-top"><div><p class="eyebrow">${index === routeStops.length - 2 ? "Final Leg" : `Leg ${index + 1}`} | ${escapeHtml(stop.date)}</p><h3>${escapeHtml(routeStops[index].label)} -> ${escapeHtml(stop.label)}</h3></div><span class="pill ${escapeHtml(stop.color)}">${escapeHtml(stop.color === "red" ? "blocked" : "placeholder")}</span></div><dl class="facts"><div><dt>Drive</dt><dd>${escapeHtml(stop.drive)}</dd></div><div><dt>Overnight Zone</dt><dd>${escapeHtml(stop.overnight)}</dd></div></dl><p>${escapeHtml(stop.note)}</p><div class="actions"><a href="${mapsSearchUrl(stop.label)}" target="_blank" rel="noreferrer">Open Map</a><a href="#hotels">Hotel Slot</a></div></article>`).join(""); }
-      function renderHotelCards() { document.querySelector("#hotel-list").innerHTML = hotelSlots.map((slot) => `<article class="hotel-card"><div class="route-top"><h3>${escapeHtml(slot.zone)}</h3><span class="pill ${escapeHtml(slot.color)}">${escapeHtml(slot.status)}</span></div><dl class="facts"><div><dt>Target</dt><dd>${escapeHtml(slot.target)}</dd></div><div><dt>Kitchen</dt><dd>${escapeHtml(slot.kitchen)}</dd></div><div><dt>Parking</dt><dd>${escapeHtml(slot.parking)}</dd></div></dl><div class="actions"><a href="${mapsSearchUrl(`${slot.zone} hotels`)}" target="_blank" rel="noreferrer">Hotel Search</a><a href="https://www.bringfido.com/lodging/" target="_blank" rel="noreferrer">Dog Check</a></div></article>`).join(""); }
-      function iconFor(color) { return L.divIcon({ className: "", html: `<div class="marker ${color}"></div>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }); }
-      function popupFor(point, type) { return `<p class="popup-title">${escapeHtml(point.label || point.zone)}</p><p class="popup-note">${escapeHtml(point.note || point.parking || point.target || "")}</p><a class="popup-link" href="${mapsSearchUrl(point.label || point.zone)}" target="_blank" rel="noreferrer">Open in Google Maps</a>${type === "hotel" ? `<br><a class="popup-link" href="#hotels">Jump to hotel notes</a>` : ""}`; }
+
+      function renderRouteCards() {
+        document.querySelector("#route-list").innerHTML = routeStops.slice(1).map((stop, index) => `
+          <article class="route-card">
+            <div class="route-top">
+              <div>
+                <p class="eyebrow">${index === routeStops.length - 2 ? "Final Leg" : `Leg ${index + 1}`} | ${escapeHtml(stop.date)}</p>
+                <h3>${escapeHtml(routeStops[index].label)} -> ${escapeHtml(stop.label)}</h3>
+              </div>
+              <span class="pill ${escapeHtml(stop.color)}">${escapeHtml(stop.color === "red" ? "blocked" : "placeholder")}</span>
+            </div>
+            <dl class="facts">
+              <div><dt>Drive</dt><dd>${escapeHtml(stop.drive)}</dd></div>
+              <div><dt>Overnight Zone</dt><dd>${escapeHtml(stop.overnight)}</dd></div>
+            </dl>
+            <p>${escapeHtml(stop.note)}</p>
+            <div class="actions">
+              <a href="${mapsSearchUrl(stop.label)}" target="_blank" rel="noreferrer">Open Map</a>
+              <a href="#hotels">Hotel Candidates</a>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function renderHotelCards() {
+        document.querySelector("#hotel-list").innerHTML = hotelSlots.map((slot) => `
+          <article class="hotel-card">
+            <div class="route-top">
+              <div>
+                <p class="eyebrow">${escapeHtml(slot.leg)} | ${escapeHtml(slot.role)}</p>
+                <h3>${escapeHtml(slot.name)}</h3>
+                <p class="note">${escapeHtml(slot.zone)}</p>
+              </div>
+              <span class="pill ${escapeHtml(slot.color)}">${escapeHtml(slot.status)}</span>
+            </div>
+            <dl class="facts">
+              <div><dt>Dog</dt><dd>${escapeHtml(slot.dog)}</dd></div>
+              <div><dt>Kitchen</dt><dd>${escapeHtml(slot.kitchen)}</dd></div>
+              <div><dt>Parking</dt><dd>${escapeHtml(slot.parking)}</dd></div>
+              <div><dt>Why</dt><dd>${escapeHtml(slot.reason)}</dd></div>
+            </dl>
+            <div class="actions">
+              <a href="${escapeHtml(slot.url)}" target="_blank" rel="noreferrer">Hotel Site</a>
+              <a href="${mapsSearchUrl(`${slot.name} ${slot.zone}`)}" target="_blank" rel="noreferrer">Open Map</a>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function iconFor(color) {
+        return L.divIcon({
+          className: "",
+          html: `<div class="marker ${color}"></div>`,
+          iconSize: [22, 22],
+          iconAnchor: [11, 11],
+          popupAnchor: [0, -12]
+        });
+      }
+
+      function popupFor(point, type) {
+        return `
+          <p class="popup-title">${escapeHtml(point.label || point.name || point.zone)}</p>
+          <p class="popup-note">${escapeHtml(point.note || point.reason || point.parking || "")}</p>
+          <a class="popup-link" href="${mapsSearchUrl(point.label || point.name || point.zone)}" target="_blank" rel="noreferrer">Open in Google Maps</a>
+          ${type === "hotel" ? `<br><a class="popup-link" href="#hotels">Jump to hotel notes</a>` : ""}
+        `;
+      }
+
       function buildMap() {
         const map = L.map("trip-map", { scrollWheelZoom: false });
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
-        const layers = { route: L.layerGroup().addTo(map), hotel: L.layerGroup().addTo(map), dog: L.layerGroup().addTo(map), avoid: L.layerGroup().addTo(map) };
-        routeStops.forEach((stop) => { const layer = stop.color === "red" ? layers.avoid : layers.route; L.marker(stop.coords, { icon: iconFor(stop.color) }).bindPopup(popupFor(stop, "route")).addTo(layer); });
-        hotelSlots.forEach((slot) => { L.marker(slot.coords, { icon: iconFor(slot.color) }).bindPopup(popupFor(slot, "hotel")).addTo(layers.hotel); });
-        extraMapPoints.forEach((point) => { L.marker(point.coords, { icon: iconFor(point.color) }).bindPopup(popupFor(point, point.layer)).addTo(layers[point.layer]); });
-        L.polyline(routeStops.map((stop) => stop.coords), { color: "#1f6f68", weight: 4, opacity: 0.72 }).addTo(layers.route);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const layers = {
+          route: L.layerGroup().addTo(map),
+          hotel: L.layerGroup().addTo(map),
+          dog: L.layerGroup().addTo(map),
+          avoid: L.layerGroup().addTo(map)
+        };
+
+        routeStops.forEach((stop) => {
+          const layer = stop.color === "red" ? layers.avoid : layers.route;
+          L.marker(stop.coords, { icon: iconFor(stop.color) }).bindPopup(popupFor(stop, "route")).addTo(layer);
+        });
+
+        hotelSlots.forEach((slot) => {
+          L.marker(slot.coords, { icon: iconFor(slot.color) }).bindPopup(popupFor(slot, "hotel")).addTo(layers.hotel);
+        });
+
+        extraMapPoints.forEach((point) => {
+          L.marker(point.coords, { icon: iconFor(point.color) }).bindPopup(popupFor(point, point.layer)).addTo(layers[point.layer]);
+        });
+
+        L.polyline(routeStops.map((stop) => stop.coords), {
+          color: "#1f6f68",
+          weight: 4,
+          opacity: 0.72
+        }).addTo(layers.route);
+
         map.fitBounds(L.latLngBounds(routeStops.map((stop) => stop.coords)), { padding: [24, 24] });
-        document.querySelectorAll("[data-layer]").forEach((input) => { input.addEventListener("change", () => { const layer = layers[input.dataset.layer]; if (input.checked) { layer.addTo(map); } else { map.removeLayer(layer); } }); });
+
+        document.querySelectorAll("[data-layer]").forEach((input) => {
+          input.addEventListener("change", () => {
+            const layer = layers[input.dataset.layer];
+            if (input.checked) {
+              layer.addTo(map);
+            } else {
+              map.removeLayer(layer);
+            }
+          });
+        });
       }
-      renderRouteCards(); renderHotelCards(); buildMap();
+
+      renderRouteCards();
+      renderHotelCards();
+      buildMap();
     </script>
   </body>
 </html>
