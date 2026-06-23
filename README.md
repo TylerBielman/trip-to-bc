@@ -1,2 +1,5 @@
 # trip-to-bc
-Trip to bc
+index.html
+README.md
+.gitignore
+.nojekyll
