@@ -1,1 +1,98 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Return to BC Road Trip</title></head><body><h1>Return to BC Road Trip</h1><p><strong>Locked updates:</strong> July 28 Ayres Suites Lake Forest. July 29 Kimpton Canary Santa Barbara. July 29 6:00 PM The Lark. July 30 The Butler Hotel in San Luis Obispo. San Luis Obispo dinner: Novo Restaurant and Lounge.</p><p>Temporary simplified recovery page. Full route planning content is preserved in repository history at commit 6f49b457020c217231c784cbab741412a794cea9.</p></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Return to BC Road Trip</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <h1 id="site-title">Return to BC Road Trip</h1>
+      <p id="site-subtitle"></p>
+      <div id="stats" class="stats"></div>
+    </header>
+
+    <nav class="nav">
+      <a href="#map-section">Map</a>
+      <a href="#route">Route Spine</a>
+      <a href="#hotels">Hotel Shortlist</a>
+      <a href="#dinners">Dinner Shortlist</a>
+      <a href="#checks">Road Checks</a>
+    </nav>
+
+    <section id="map-section">
+      <div class="head">
+        <h2>Route Map</h2>
+        <p class="note">Editable planning spine, not turn-by-turn navigation.</p>
+      </div>
+      <div class="map-grid">
+        <article class="panel">
+          <div id="map"></div>
+          <div class="actions">
+            <a id="full-route-link" href="#" target="_blank" rel="noreferrer">Open Full Route</a>
+            <a href="https://quickmap.dot.ca.gov/" target="_blank" rel="noreferrer">Check Caltrans</a>
+          </div>
+        </article>
+        <div class="side">
+          <article class="panel locked">
+            <h3>Locked So Far</h3>
+            <ul id="locked-list"></ul>
+          </article>
+          <article class="panel alert">
+            <h3>Call / Confirm Before Arrival</h3>
+            <p>Confirm dog-room details, parking/unloading plan, and any valet or lot instructions. Keep confirmation numbers off this public page.</p>
+          </article>
+          <article class="panel">
+            <h3>Map Legend</h3>
+            <p><span class="marker green"></span> Coastal / primary overnight<br><span class="marker yellow"></span> Inland / city overnight<br><span class="marker blue"></span> Ferry approach<br><span class="marker red"></span> Final arrival</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="route">
+      <div class="head"><h2>Route Spine</h2><p class="note">Each card leads with the overnight plan and the driving leg that gets us there.</p></div>
+      <div id="route-list" class="route"></div>
+    </section>
+
+    <section id="hotels">
+      <div class="head"><h2>Hotel Shortlist</h2><p class="note">Locked items and booking/contact details are included. Confirm pet rules, fees, and parking directly before arrival.</p></div>
+      <div id="hotel-list" class="grid2"></div>
+    </section>
+
+    <section id="dinners">
+      <div class="head"><h2>Dinner Shortlist</h2><p class="note">Locked reservations are called out. Other dinner cards are planning backups by area.</p></div>
+      <div id="dinner-list" class="grid2"></div>
+    </section>
+
+    <section id="checks" class="grid2">
+      <article class="panel">
+        <h2>Before Each Coastal Leg</h2>
+        <ol>
+          <li>Check Caltrans QuickMap and Highway 1 conditions.</li>
+          <li>Download the day in Google Maps for weak-signal areas.</li>
+          <li>Start with a full tank before Big Sur.</li>
+          <li>Keep the inland US-101 fallback available.</li>
+        </ol>
+      </article>
+      <article class="panel">
+        <h2>Hotel / Ferry Call Script</h2>
+        <ol>
+          <li>Confirm the room works for the dog.</li>
+          <li>Ask for total pet fees and rules.</li>
+          <li>Ask whether parking is covered, valet, gated, garage, or surface lot.</li>
+          <li>For Port Townsend, confirm the morning buffer to the Port Angeles ferry.</li>
+        </ol>
+      </article>
+    </section>
+
+    <footer id="footer"></footer>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
