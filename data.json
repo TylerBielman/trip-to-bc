@@ -2,7 +2,7 @@
   "meta": {
     "title": "Return to BC Road Trip",
     "subtitle": "Lake Forest to Victoria, BC via Highway 1, Santa Cruz, Southern Oregon, and Port Townsend.",
-    "version": "3.0",
+    "version": "3.1",
     "updated": "2026-07-05",
     "statusNote": "Modular rescue build: route, hotels, and dinners render from data.json so future edits should not require touching layout code."
   },
@@ -22,6 +22,10 @@
     {
       "label": "Locked SLO Dinner",
       "value": "Novo Restaurant"
+    },
+    {
+      "label": "Locked Monterey Hotel",
+      "value": "Sea Breeze Inn & Cottages"
     }
   ],
   "locked": [
@@ -29,7 +33,8 @@
     "July 29: Kimpton Canary Santa Barbara",
     "July 29 at 6:00 PM: The Lark",
     "July 30: The Butler Hotel in San Luis Obispo",
-    "San Luis Obispo dinner: Novo Restaurant & Lounge"
+    "San Luis Obispo dinner: Novo Restaurant & Lounge",
+    "July 31-Aug 2: Sea Breeze Inn & Cottages in Pacific Grove"
   ],
   "route": [
     {
@@ -75,17 +80,18 @@
       "locked": true
     },
     {
-      "label": "Monterey / Carmel",
+      "label": "Sea Breeze Inn & Cottages, Pacific Grove",
       "date": "Fri Jul 31-Sun Aug 2",
       "drive": "2.5-4.0 hr",
-      "overnight": "Two nights in Monterey, Pacific Grove, or Carmel",
-      "headline": "2 nights in Monterey / Carmel",
+      "overnight": "Sea Breeze Inn & Cottages",
+      "headline": "2 locked nights in Pacific Grove",
       "coords": [
-        36.6002,
-        -121.8947
+        36.6264,
+        -121.9343
       ],
       "color": "green",
-      "note": "Big Sur arrival day plus one full recovery or exploration day."
+      "note": "Locked Monterey-area stay at Sea Breeze Inn & Cottages in Pacific Grove after the Big Sur leg.",
+      "locked": true
     },
     {
       "label": "Santa Cruz",
@@ -278,14 +284,16 @@
       "why": "Backup if the locked SLO plan changes."
     },
     {
-      "zone": "Monterey",
-      "name": "Hyatt Regency Monterey",
-      "role": "Primary - two nights",
-      "phone": "831-372-1234",
-      "url": "https://www.hyatt.com/hyatt-regency/en-US/mrydm-hyatt-regency-monterey-hotel-and-spa",
-      "dog": "Confirm current dog policy and total fee.",
-      "parking": "Confirm best overnight parking area.",
-      "why": "Practical full-service two-night base after the Big Sur leg."
+      "zone": "Pacific Grove",
+      "name": "Sea Breeze Inn & Cottages",
+      "role": "LOCKED - July 31-Aug 2 Monterey-area stay",
+      "phone": "831-372-7771",
+      "address": "1100 Lighthouse Ave, Pacific Grove, CA 93950",
+      "url": "https://www.seabreezeinnandcottages.com/",
+      "dog": "Locked by reservation; confirm dog-room details, pet fees, and room rules before arrival.",
+      "parking": "Confirm parking / unloading plan with the front desk.",
+      "why": "Locked two-night Monterey-area base; technically in Pacific Grove, close to the coast after the Big Sur leg.",
+      "locked": true
     },
     {
       "zone": "Santa Cruz",
