@@ -1,10 +1,11 @@
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const mapUrl = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 const telUrl = (p) => `tel:${String(p).replace(/[^0-9+]/g, '')}`;
+const mapQuery = (item) => item.address ? `${item.name}, ${item.address}` : (item.name || item.label);
 
 function actionLinks(item) {
   const links = [];
-  links.push(`<a href="${mapUrl(item.name || item.label)}" target="_blank" rel="noreferrer">Open Map</a>`);
+  links.push(`<a href="${mapUrl(mapQuery(item))}" target="_blank" rel="noreferrer">Open Map</a>`);
   if (item.url) links.push(`<a href="${esc(item.url)}" target="_blank" rel="noreferrer">Official Site</a>`);
   if (item.phone && !String(item.phone).startsWith('Use ')) links.push(`<a href="${telUrl(item.phone)}">Call ${esc(item.phone)}</a>`);
   if (Array.isArray(item.links)) {
@@ -46,7 +47,10 @@ function renderCards(selector, items, fields) {
       <p class="eyebrow">${esc(item.zone)} | ${esc(item.role)}</p>
       <h3>${esc(item.name)}</h3>
       <div class="facts">
-        ${fields.map(([label, key]) => `<div class="fact"><b>${esc(label)}</b><span>${esc(item[key])}</span></div>`).join('')}
+        ${fields
+          .filter(([, key]) => item[key])
+          .map(([label, key]) => `<div class="fact"><b>${esc(label)}</b><span>${esc(item[key])}</span></div>`)
+          .join('')}
       </div>
       ${actionLinks(item)}
     </article>
@@ -81,7 +85,7 @@ async function main() {
   document.querySelector('#full-route-link').href = fullRouteUrl(data.route);
 
   renderRoute(data.route);
-  renderCards('#hotel-list', data.hotels, [['Phone', 'phone'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
+  renderCards('#hotel-list', data.hotels, [['Address', 'address'], ['Phone', 'phone'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
   renderCards('#dinner-list', data.dinners, [['Phone', 'phone'], ['Dog', 'dog'], ['Why', 'why']]);
   renderMap(data.route);
 
