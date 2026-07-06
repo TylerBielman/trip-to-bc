@@ -1,5 +1,14 @@
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const mapUrl = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const directionsUrl = (origin, destination) => {
+  const params = new URLSearchParams({
+    api: '1',
+    origin,
+    destination,
+    travelmode: 'driving'
+  });
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+};
 const telUrl = (p) => `tel:${String(p).replace(/[^0-9+]/g, '')}`;
 const mapQuery = (item) => item.address ? `${item.name}, ${item.address}` : (item.name || item.label);
 
@@ -12,6 +21,27 @@ function actionLinks(item) {
     item.links.forEach((link) => links.push(`<a href="${esc(link.url)}" target="_blank" rel="noreferrer">${esc(link.label)}</a>`));
   }
   return `<div class="actions">${links.join('')}</div>`;
+}
+
+function routeActionLinks(route, index) {
+  const stop = route[index];
+  const previousStop = route[index - 1];
+  const nextStop = route[index + 1];
+  const links = [];
+
+  if (previousStop) {
+    links.push(`<a href="${directionsUrl(mapQuery(previousStop), mapQuery(stop))}" target="_blank" rel="noreferrer">Route to</a>`);
+  }
+
+  if (nextStop) {
+    links.push(`<a href="${directionsUrl(mapQuery(stop), mapQuery(nextStop))}" target="_blank" rel="noreferrer">To next destination</a>`);
+  }
+
+  if (Array.isArray(stop.links)) {
+    stop.links.forEach((link) => links.push(`<a href="${esc(link.url)}" target="_blank" rel="noreferrer">${esc(link.label)}</a>`));
+  }
+
+  return links.length ? `<div class="actions">${links.join('')}</div>` : '';
 }
 
 function statusClass(item) {
@@ -36,7 +66,7 @@ function renderRoute(route) {
         <div class="fact"><b>Overnight</b><span>${esc(stop.overnight)}</span></div>
         <div class="fact"><b>Notes</b><span>${esc(stop.note)}</span></div>
       </div>
-      ${actionLinks(stop)}
+      ${routeActionLinks(route, index)}
     </article>
   `).join('');
 }
