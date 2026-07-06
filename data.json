@@ -2,9 +2,9 @@
   "meta": {
     "title": "Return to BC Road Trip",
     "subtitle": "Lake Forest to Victoria, BC via Highway 1, Santa Cruz, Southern Oregon, and Port Townsend.",
-    "version": "3.1",
+    "version": "3.2",
     "updated": "2026-07-05",
-    "statusNote": "Modular rescue build: route, hotels, and dinners render from data.json so future edits should not require touching layout code."
+    "statusNote": "Modular rescue build: route buttons use precise Google Maps queries while route, hotels, and dinners render from data.json."
   },
   "stats": [
     {
@@ -39,6 +39,7 @@
   "route": [
     {
       "label": "Ayres Suites Lake Forest",
+      "mapsQuery": "Ayres Suites Lake Forest, Lake Forest, CA",
       "date": "Tue Jul 28",
       "drive": "Local repositioning",
       "overnight": "Ayres Suites Lake Forest",
@@ -53,6 +54,7 @@
     },
     {
       "label": "Kimpton Canary Santa Barbara",
+      "mapsQuery": "Kimpton Canary Santa Barbara, Santa Barbara, CA",
       "date": "Wed Jul 29",
       "drive": "3.0-4.0 hr",
       "overnight": "Kimpton Canary Santa Barbara",
@@ -67,6 +69,7 @@
     },
     {
       "label": "The Butler Hotel, San Luis Obispo",
+      "mapsQuery": "The Butler Hotel, San Luis Obispo, CA",
       "date": "Thu Jul 30",
       "drive": "1.75-2.5 hr",
       "overnight": "The Butler Hotel",
@@ -81,6 +84,7 @@
     },
     {
       "label": "Sea Breeze Inn & Cottages, Pacific Grove",
+      "mapsQuery": "Sea Breeze Inn & Cottages, 1100 Lighthouse Ave, Pacific Grove, CA 93950",
       "date": "Fri Jul 31-Sun Aug 2",
       "drive": "2.5-4.0 hr",
       "overnight": "Sea Breeze Inn & Cottages",
@@ -95,6 +99,7 @@
     },
     {
       "label": "Santa Cruz",
+      "mapsQuery": "Santa Cruz, CA",
       "date": "Sun Aug 2",
       "drive": "1.25-2.0 hr",
       "overnight": "Santa Cruz",
@@ -104,10 +109,11 @@
         -122.0308
       ],
       "color": "green",
-      "note": "Friend-recommended beachfront stop replacing Half Moon Bay / South SF."
+      "note": "Friend-recommended beachfront stop replacing Half Moon Bay / South SF. Route buttons use Santa Cruz, CA to avoid ambiguous Google Maps resolution."
     },
     {
       "label": "Redding",
+      "mapsQuery": "Redding, CA",
       "date": "Mon Aug 3",
       "drive": "4.5-5.75 hr",
       "overnight": "Redding or Anderson",
@@ -117,10 +123,11 @@
         -122.3917
       ],
       "color": "yellow",
-      "note": "Long California transition day before crossing into Oregon."
+      "note": "Long California transition day before crossing into Oregon. Route buttons use Redding, CA to avoid ambiguous Google Maps resolution."
     },
     {
       "label": "Jacksonville / Ashland",
+      "mapsQuery": "Ashland, OR",
       "date": "Tue Aug 4",
       "drive": "2.5-3.25 hr",
       "overnight": "Jacksonville or Ashland",
@@ -130,10 +137,11 @@
         -122.9664
       ],
       "color": "yellow",
-      "note": "Southern Oregon break between Redding and Portland. Jacksonville is the charm pick; Ashland is the practical backup."
+      "note": "Southern Oregon break between Redding and Portland. Jacksonville is the charm pick; Ashland is the practical backup. Route buttons currently target Ashland, OR for clarity."
     },
     {
       "label": "Portland east / Cascade Station",
+      "mapsQuery": "Cascade Station, Portland, OR",
       "date": "Wed Aug 5-Sun Aug 9",
       "drive": "4.5-5.5 hr",
       "overnight": "Four nights near SE 109th",
@@ -147,6 +155,7 @@
     },
     {
       "label": "Seattle / Northgate",
+      "mapsQuery": "Northgate, Seattle, WA",
       "date": "Sun Aug 9-Tue Aug 11",
       "drive": "3.0-3.5 hr",
       "overnight": "Two nights in Northgate",
@@ -160,6 +169,7 @@
     },
     {
       "label": "Port Townsend",
+      "mapsQuery": "Port Townsend, WA",
       "date": "Tue Aug 11",
       "drive": "2.0-3.5 hr",
       "overnight": "At least one night in Port Townsend",
@@ -173,6 +183,7 @@
     },
     {
       "label": "Port Angeles Ferry Terminal",
+      "mapsQuery": "Port Angeles Ferry Terminal, Port Angeles, WA",
       "date": "Wed Aug 12",
       "drive": "Leave Port Townsend by 9:45 AM; target terminal arrival 11:00-11:15 AM",
       "overnight": "Ferry staging only",
@@ -196,6 +207,7 @@
     },
     {
       "label": "Victoria, BC",
+      "mapsQuery": "Victoria, BC, Canada",
       "date": "Wed Aug 12 target; by Sat Aug 15 latest",
       "drive": "Ferry arrival same day",
       "overnight": "Victoria / temporary housing",
