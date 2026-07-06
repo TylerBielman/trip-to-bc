@@ -11,6 +11,7 @@ const directionsUrl = (origin, destination) => {
 };
 const telUrl = (p) => `tel:${String(p).replace(/[^0-9+]/g, '')}`;
 const mapQuery = (item) => item.address ? `${item.name}, ${item.address}` : (item.name || item.label);
+const routeMapQuery = (item) => item.mapsQuery || mapQuery(item);
 
 function actionLinks(item) {
   const links = [];
@@ -30,11 +31,11 @@ function routeActionLinks(route, index) {
   const links = [];
 
   if (previousStop) {
-    links.push(`<a href="${directionsUrl(mapQuery(previousStop), mapQuery(stop))}" target="_blank" rel="noreferrer">Route to</a>`);
+    links.push(`<a href="${directionsUrl(routeMapQuery(previousStop), routeMapQuery(stop))}" target="_blank" rel="noreferrer">Route to</a>`);
   }
 
   if (nextStop) {
-    links.push(`<a href="${directionsUrl(mapQuery(stop), mapQuery(nextStop))}" target="_blank" rel="noreferrer">To next destination</a>`);
+    links.push(`<a href="${directionsUrl(routeMapQuery(stop), routeMapQuery(nextStop))}" target="_blank" rel="noreferrer">To next destination</a>`);
   }
 
   if (Array.isArray(stop.links)) {
@@ -93,7 +94,7 @@ function renderMap(route) {
   const icon = (color) => L.divIcon({ className: '', html: `<span class="marker ${esc(color)}"></span>`, iconSize: [22, 22], iconAnchor: [11, 11] });
   route.forEach((stop) => {
     L.marker(stop.coords, { icon: icon(stop.color) })
-      .bindPopup(`<b>${esc(stop.label)}</b><br>${esc(stop.note)}<br><a href="${mapUrl(stop.label)}" target="_blank">Open Map</a>`)
+      .bindPopup(`<b>${esc(stop.label)}</b><br>${esc(stop.note)}<br><a href="${mapUrl(routeMapQuery(stop))}" target="_blank">Open Map</a>`)
       .addTo(map);
   });
   L.polyline(route.map((stop) => stop.coords), { color: '#1f6f68', weight: 4, opacity: 0.78 }).addTo(map);
@@ -101,7 +102,7 @@ function renderMap(route) {
 }
 
 function fullRouteUrl(route) {
-  return `https://www.google.com/maps/dir/${route.map((stop) => encodeURIComponent(stop.label)).join('/')}`;
+  return `https://www.google.com/maps/dir/${route.map((stop) => encodeURIComponent(routeMapQuery(stop))).join('/')}`;
 }
 
 async function main() {
