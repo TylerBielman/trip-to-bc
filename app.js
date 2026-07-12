@@ -13,6 +13,13 @@ const telUrl = (p) => `tel:${String(p).replace(/[^0-9+]/g, '')}`;
 const mapQuery = (item) => item.address ? `${item.name}, ${item.address}` : (item.name || item.label);
 const routeMapQuery = (item) => item.mapsQuery || mapQuery(item);
 
+const LOCKED_HOTEL_TIMES = {
+  'Ayres Suites Lake Forest': { checkIn: '3:00 PM', checkOut: '12:00 PM' },
+  'Kimpton Canary Santa Barbara': { checkIn: '4:00 PM', checkOut: '12:00 PM' },
+  'The Butler Hotel': { checkIn: '3:00 PM', checkOut: '11:00 AM' },
+  'Sea Breeze Inn & Cottages': { checkIn: '3:00 PM', checkOut: '11:00 AM' }
+};
+
 function actionLinks(item) {
   const links = [];
   links.push(`<a href="${mapUrl(mapQuery(item))}" target="_blank" rel="noreferrer">Open Map</a>`);
@@ -115,8 +122,10 @@ async function main() {
   document.querySelector('#locked-list').innerHTML = data.locked.map((item) => `<li>${esc(item)}</li>`).join('');
   document.querySelector('#full-route-link').href = fullRouteUrl(data.route);
 
+  const hotels = data.hotels.map((hotel) => ({ ...hotel, ...(LOCKED_HOTEL_TIMES[hotel.name] || {}) }));
+
   renderRoute(data.route);
-  renderCards('#hotel-list', data.hotels, [['Address', 'address'], ['Phone', 'phone'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
+  renderCards('#hotel-list', hotels, [['Address', 'address'], ['Phone', 'phone'], ['Check-in', 'checkIn'], ['Check-out', 'checkOut'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
   renderCards('#dinner-list', data.dinners, [['Phone', 'phone'], ['Dog', 'dog'], ['Why', 'why']]);
   renderMap(data.route);
 
