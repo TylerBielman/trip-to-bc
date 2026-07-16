@@ -17,7 +17,8 @@ const LOCKED_HOTEL_TIMES = {
   'Ayres Suites Lake Forest': { checkIn: '3:00 PM', checkOut: '12:00 PM' },
   'Kimpton Canary Santa Barbara': { checkIn: '4:00 PM', checkOut: '12:00 PM' },
   'The Butler Hotel': { checkIn: '3:00 PM', checkOut: '11:00 AM' },
-  'Sea Breeze Inn & Cottages': { checkIn: '3:00 PM', checkOut: '11:00 AM' }
+  'Sea Breeze Inn & Cottages': { checkIn: '3:00 PM', checkOut: '11:00 AM' },
+  'Seaway Inn': { checkIn: '4:00 PM', checkOut: '11:00 AM' }
 };
 
 function actionLinks(item) {
@@ -125,7 +126,7 @@ async function main() {
   const hotels = data.hotels.map((hotel) => ({ ...hotel, ...(LOCKED_HOTEL_TIMES[hotel.name] || {}) }));
 
   renderRoute(data.route);
-  renderCards('#hotel-list', hotels, [['Address', 'address'], ['Phone', 'phone'], ['Check-in', 'checkIn'], ['Check-out', 'checkOut'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
+  renderCards('#hotel-list', hotels, [['Address', 'address'], ['Phone', 'phone'], ['Itinerary', 'itinerary'], ['Check-in', 'checkIn'], ['Check-out', 'checkOut'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
   renderCards('#dinner-list', data.dinners, [['Phone', 'phone'], ['Dog', 'dog'], ['Why', 'why']]);
   renderMap(data.route);
 
