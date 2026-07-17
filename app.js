@@ -52,7 +52,7 @@ function renderConfirmedHotel(hotel) {
   ];
 
   return `
-    <div class="panel locked">
+    <div class="panel locked reservation-block">
       <p class="eyebrow">Confirmed hotel</p>
       <h3>${esc(hotel.name)}</h3>
       <div class="facts">
@@ -66,10 +66,36 @@ function renderConfirmedHotel(hotel) {
   `;
 }
 
-function renderRoute(route, hotels) {
+function renderConfirmedDinner(dinner) {
+  if (!dinner) return '';
+  const fields = [
+    ['Reservation', 'reservation'],
+    ['Phone', 'phone'],
+    ['Dog / patio', 'dog'],
+    ['Important', 'why']
+  ];
+
+  return `
+    <div class="panel locked reservation-block">
+      <p class="eyebrow">Confirmed dinner</p>
+      <h3>${esc(dinner.name)}</h3>
+      <div class="facts">
+        ${fields
+          .filter(([, key]) => dinner[key])
+          .map(([label, key]) => `<div class="fact"><b>${esc(label)}</b><span>${esc(dinner[key])}</span></div>`)
+          .join('')}
+      </div>
+      ${actionLinks(dinner)}
+    </div>
+  `;
+}
+
+function renderRoute(route, hotels, dinners) {
   const hotelByName = new Map(hotels.map((hotel) => [hotel.name, hotel]));
+  const dinnerByName = new Map(dinners.map((dinner) => [dinner.name, dinner]));
   document.querySelector('#route-list').innerHTML = route.map((stop, index) => {
     const hotel = stop.hotelName ? hotelByName.get(stop.hotelName) : null;
+    const dinner = stop.dinnerName ? dinnerByName.get(stop.dinnerName) : null;
     return `
       <article class="card ${statusClass(stop)}">
         <div class="route-head">
@@ -86,6 +112,7 @@ function renderRoute(route, hotels) {
           <div class="fact"><b>Notes</b><span>${esc(stop.note)}</span></div>
         </div>
         ${renderConfirmedHotel(hotel)}
+        ${renderConfirmedDinner(dinner)}
         ${routeActionLinks(route, index)}
       </article>
     `;
@@ -135,8 +162,12 @@ async function main() {
   document.querySelector('#locked-list').innerHTML = data.locked.map((item) => `<li>${esc(item)}</li>`).join('');
   document.querySelector('#full-route-link').href = fullRouteUrl(data.route);
 
-  renderRoute(data.route, data.hotels.filter((hotel) => hotel.locked));
-  renderCards('#dinner-list', data.dinners, [['Phone', 'phone'], ['Dog', 'dog'], ['Why', 'why']]);
+  const lockedHotels = data.hotels.filter((hotel) => hotel.locked);
+  const lockedDinners = data.dinners.filter((dinner) => dinner.locked);
+  const dinnerIdeas = data.dinners.filter((dinner) => !dinner.locked);
+
+  renderRoute(data.route, lockedHotels, lockedDinners);
+  renderCards('#dinner-list', dinnerIdeas, [['Phone', 'phone'], ['Dog', 'dog'], ['Why', 'why']]);
   renderMap(data.route);
 
   document.querySelector('#footer').textContent = `Version ${data.meta.version} | ${data.meta.statusNote} Updated ${data.meta.updated}.`;
