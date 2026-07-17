@@ -1,25 +1,12 @@
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const mapUrl = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 const directionsUrl = (origin, destination) => {
-  const params = new URLSearchParams({
-    api: '1',
-    origin,
-    destination,
-    travelmode: 'driving'
-  });
+  const params = new URLSearchParams({ api: '1', origin, destination, travelmode: 'driving' });
   return `https://www.google.com/maps/dir/?${params.toString()}`;
 };
 const telUrl = (p) => `tel:${String(p).replace(/[^0-9+]/g, '')}`;
 const mapQuery = (item) => item.address ? `${item.name}, ${item.address}` : (item.name || item.label);
 const routeMapQuery = (item) => item.mapsQuery || mapQuery(item);
-
-const LOCKED_HOTEL_TIMES = {
-  'Ayres Suites Lake Forest': { checkIn: '3:00 PM', checkOut: '12:00 PM' },
-  'Kimpton Canary Santa Barbara': { checkIn: '4:00 PM', checkOut: '12:00 PM' },
-  'The Butler Hotel': { checkIn: '3:00 PM', checkOut: '11:00 AM' },
-  'Sea Breeze Inn & Cottages': { checkIn: '3:00 PM', checkOut: '11:00 AM' },
-  'Seaway Inn': { checkIn: '4:00 PM', checkOut: '11:00 AM' }
-};
 
 function actionLinks(item) {
   const links = [];
@@ -38,17 +25,9 @@ function routeActionLinks(route, index) {
   const nextStop = route[index + 1];
   const links = [];
 
-  if (previousStop) {
-    links.push(`<a href="${directionsUrl(routeMapQuery(previousStop), routeMapQuery(stop))}" target="_blank" rel="noreferrer">Route to</a>`);
-  }
-
-  if (nextStop) {
-    links.push(`<a href="${directionsUrl(routeMapQuery(stop), routeMapQuery(nextStop))}" target="_blank" rel="noreferrer">To next destination</a>`);
-  }
-
-  if (Array.isArray(stop.links)) {
-    stop.links.forEach((link) => links.push(`<a href="${esc(link.url)}" target="_blank" rel="noreferrer">${esc(link.label)}</a>`));
-  }
+  if (previousStop) links.push(`<a href="${directionsUrl(routeMapQuery(previousStop), routeMapQuery(stop))}" target="_blank" rel="noreferrer">Route to</a>`);
+  if (nextStop) links.push(`<a href="${directionsUrl(routeMapQuery(stop), routeMapQuery(nextStop))}" target="_blank" rel="noreferrer">To next destination</a>`);
+  if (Array.isArray(stop.links)) stop.links.forEach((link) => links.push(`<a href="${esc(link.url)}" target="_blank" rel="noreferrer">${esc(link.label)}</a>`));
 
   return links.length ? `<div class="actions">${links.join('')}</div>` : '';
 }
@@ -59,25 +38,58 @@ function statusClass(item) {
   return '';
 }
 
-function renderRoute(route) {
-  document.querySelector('#route-list').innerHTML = route.map((stop, index) => `
-    <article class="card ${statusClass(stop)}">
-      <div class="route-head">
-        <div>
-          <p class="eyebrow">${index === route.length - 1 ? 'Final leg' : `Leg ${index + 1}`} | ${esc(stop.date)}</p>
-          <h3 class="stayline">${esc(stop.headline)}</h3>
-          <p class="legline">${index === 0 ? 'Local start' : `${esc(route[index - 1].label)} → ${esc(stop.label)}`}</p>
-        </div>
-        <span class="pill ${esc(stop.color)}">${stop.color === 'green' ? 'coastal' : stop.color === 'blue' ? 'ferry approach' : stop.color === 'red' ? 'arrival' : 'inland / city'}</span>
-      </div>
+function renderConfirmedHotel(hotel) {
+  if (!hotel) return '';
+  const fields = [
+    ['Address', 'address'],
+    ['Phone', 'phone'],
+    ['Confirmation', 'itinerary'],
+    ['Check-in', 'checkIn'],
+    ['Check-out', 'checkOut'],
+    ['Dog', 'dog'],
+    ['Parking', 'parking'],
+    ['Important', 'why']
+  ];
+
+  return `
+    <div class="panel locked">
+      <p class="eyebrow">Confirmed hotel</p>
+      <h3>${esc(hotel.name)}</h3>
       <div class="facts">
-        <div class="fact"><b>Drive</b><span>${esc(stop.drive)}</span></div>
-        <div class="fact"><b>Overnight</b><span>${esc(stop.overnight)}</span></div>
-        <div class="fact"><b>Notes</b><span>${esc(stop.note)}</span></div>
+        ${fields
+          .filter(([, key]) => hotel[key])
+          .map(([label, key]) => `<div class="fact"><b>${esc(label)}</b><span>${esc(hotel[key])}</span></div>`)
+          .join('')}
       </div>
-      ${routeActionLinks(route, index)}
-    </article>
-  `).join('');
+      ${actionLinks(hotel)}
+    </div>
+  `;
+}
+
+function renderRoute(route, hotels) {
+  const hotelByName = new Map(hotels.map((hotel) => [hotel.name, hotel]));
+  document.querySelector('#route-list').innerHTML = route.map((stop, index) => {
+    const hotel = stop.hotelName ? hotelByName.get(stop.hotelName) : null;
+    return `
+      <article class="card ${statusClass(stop)}">
+        <div class="route-head">
+          <div>
+            <p class="eyebrow">${index === route.length - 1 ? 'Final leg' : `Leg ${index + 1}`} | ${esc(stop.date)}</p>
+            <h3 class="stayline">${esc(stop.headline)}</h3>
+            <p class="legline">${index === 0 ? 'Local start' : `${esc(route[index - 1].label)} → ${esc(stop.label)}`}</p>
+          </div>
+          <span class="pill ${esc(stop.color)}">${stop.color === 'green' ? 'coastal' : stop.color === 'blue' ? 'ferry approach' : stop.color === 'red' ? 'arrival' : 'inland / city'}</span>
+        </div>
+        <div class="facts">
+          <div class="fact"><b>Drive</b><span>${esc(stop.drive)}</span></div>
+          <div class="fact"><b>Overnight</b><span>${esc(stop.overnight)}</span></div>
+          <div class="fact"><b>Notes</b><span>${esc(stop.note)}</span></div>
+        </div>
+        ${renderConfirmedHotel(hotel)}
+        ${routeActionLinks(route, index)}
+      </article>
+    `;
+  }).join('');
 }
 
 function renderCards(selector, items, fields) {
@@ -123,10 +135,7 @@ async function main() {
   document.querySelector('#locked-list').innerHTML = data.locked.map((item) => `<li>${esc(item)}</li>`).join('');
   document.querySelector('#full-route-link').href = fullRouteUrl(data.route);
 
-  const hotels = data.hotels.map((hotel) => ({ ...hotel, ...(LOCKED_HOTEL_TIMES[hotel.name] || {}) }));
-
-  renderRoute(data.route);
-  renderCards('#hotel-list', hotels, [['Address', 'address'], ['Phone', 'phone'], ['Itinerary', 'itinerary'], ['Check-in', 'checkIn'], ['Check-out', 'checkOut'], ['Dog', 'dog'], ['Parking', 'parking'], ['Why', 'why']]);
+  renderRoute(data.route, data.hotels.filter((hotel) => hotel.locked));
   renderCards('#dinner-list', data.dinners, [['Phone', 'phone'], ['Dog', 'dog'], ['Why', 'why']]);
   renderMap(data.route);
 
