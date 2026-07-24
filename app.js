@@ -152,8 +152,41 @@ function fullRouteUrl(route) {
   return `https://www.google.com/maps/dir/${route.map((stop) => encodeURIComponent(routeMapQuery(stop))).join('/')}`;
 }
 
+function applyTripOverrides(data) {
+  data.meta.version = '3.9';
+  data.meta.updated = '2026-07-24';
+
+  data.locked = data.locked.map((item) => item === 'Aug 5-9: Residence Inn Portland Airport at Cascade Station'
+    ? 'Aug 5-10: Residence Inn Portland Airport at Cascade Station'
+    : item);
+
+  const portland = data.route.find((stop) => stop.label === 'Residence Inn Portland Airport at Cascade Station');
+  if (portland) {
+    portland.date = 'Wed Aug 5-Mon Aug 10';
+    portland.headline = '5 locked nights in Portland';
+    portland.note = 'Locked five-night Portland base near Cascade Station and SE 109th. Check in Aug 5 at 4:00 PM; check out Aug 10.';
+  }
+
+  const seattle = data.route.find((stop) => stop.label === 'Seattle / Northgate');
+  if (seattle) {
+    seattle.date = 'Mon Aug 10-Tue Aug 11';
+    seattle.overnight = 'One night in Northgate';
+    seattle.headline = '1 night in Seattle / Northgate';
+    seattle.note = 'One-night Seattle stay in the Northgate area. Hotel not yet locked.';
+  }
+
+  const portlandHotel = data.hotels.find((hotel) => hotel.zone === 'Portland');
+  if (portlandHotel) {
+    portlandHotel.role = 'LOCKED - Aug 5-10 Portland stay';
+    portlandHotel.checkOut = 'Aug 10';
+    portlandHotel.why = 'Locked five-night Portland base near Cascade Station and SE 109th.';
+  }
+
+  return data;
+}
+
 async function main() {
-  const data = await fetch('./data.json').then((response) => response.json());
+  const data = applyTripOverrides(await fetch('./data.json').then((response) => response.json()));
 
   document.title = data.meta.title;
   document.querySelector('#site-title').textContent = data.meta.title;
