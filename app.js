@@ -90,6 +90,29 @@ function renderConfirmedDinner(dinner) {
   `;
 }
 
+function renderScheduledStops(appointments) {
+  if (!Array.isArray(appointments) || !appointments.length) return '';
+  const fields = [
+    ['Time', 'time'],
+    ['Address', 'address'],
+    ['Details', 'details']
+  ];
+
+  return appointments.map((appointment) => `
+    <div class="panel locked reservation-block">
+      <p class="eyebrow">Scheduled stop</p>
+      <h3>${esc(appointment.name)}</h3>
+      <div class="facts">
+        ${fields
+          .filter(([, key]) => appointment[key])
+          .map(([label, key]) => `<div class="fact"><b>${esc(label)}</b><span>${esc(appointment[key])}</span></div>`)
+          .join('')}
+      </div>
+      ${actionLinks(appointment)}
+    </div>
+  `).join('');
+}
+
 function renderRoute(route, hotels, dinners) {
   const hotelByName = new Map(hotels.map((hotel) => [hotel.name, hotel]));
   const dinnerByName = new Map(dinners.map((dinner) => [dinner.name, dinner]));
@@ -111,6 +134,7 @@ function renderRoute(route, hotels, dinners) {
           <div class="fact"><b>Overnight</b><span>${esc(stop.overnight)}</span></div>
           <div class="fact"><b>Notes</b><span>${esc(stop.note)}</span></div>
         </div>
+        ${renderScheduledStops(stop.appointments)}
         ${renderConfirmedHotel(hotel)}
         ${renderConfirmedDinner(dinner)}
         ${routeActionLinks(route, index)}
@@ -153,12 +177,29 @@ function fullRouteUrl(route) {
 }
 
 function applyTripOverrides(data) {
-  data.meta.version = '3.9';
-  data.meta.updated = '2026-07-24';
+  data.meta.version = '4.0';
+  data.meta.updated = '2026-07-25';
 
   data.locked = data.locked.map((item) => item === 'Aug 5-9: Residence Inn Portland Airport at Cascade Station'
     ? 'Aug 5-10: Residence Inn Portland Airport at Cascade Station'
     : item);
+
+  const pharmacyLocked = 'Aug 3 at 9:30 AM: KP Pharmacy in Santa Cruz';
+  if (!data.locked.includes(pharmacyLocked)) {
+    const seawayIndex = data.locked.findIndex((item) => item === 'Aug 2-3: Seaway Inn in Santa Cruz');
+    data.locked.splice(seawayIndex >= 0 ? seawayIndex + 1 : data.locked.length, 0, pharmacyLocked);
+  }
+
+  const santaCruz = data.route.find((stop) => stop.label === 'Seaway Inn, Santa Cruz');
+  if (santaCruz) {
+    santaCruz.note = 'Locked beachfront stay at Seaway Inn. Check in Aug 2 and check out Aug 3, then stop at KP Pharmacy at 9:30 AM before departing for Redding.';
+    santaCruz.appointments = [{
+      name: 'KP Pharmacy — Pick up meds',
+      time: 'Monday, Aug 3 at 9:30 AM',
+      address: '110 Cooper St, Suite 500, Floor 2, Room 22R03, Santa Cruz, CA 95060',
+      details: 'Scheduled pharmacy stop before the drive to Redding.'
+    }];
+  }
 
   const portland = data.route.find((stop) => stop.label === 'Residence Inn Portland Airport at Cascade Station');
   if (portland) {
