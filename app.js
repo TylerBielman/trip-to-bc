@@ -177,12 +177,25 @@ function fullRouteUrl(route) {
 }
 
 function applyTripOverrides(data) {
-  data.meta.version = '4.0';
-  data.meta.updated = '2026-07-25';
+  data.meta.version = '4.1';
+  data.meta.updated = '2026-07-26';
+  data.meta.subtitle = 'Lake Forest to Vancouver, BC via Highway 1, the Northern California redwoods, the Oregon coast, Port Townsend, and Victoria.';
+  data.meta.statusNote = 'The coastal heat-avoidance pivot is locked: Eureka on Aug 3, Bandon on Aug 4, then Portland on Aug 5.';
 
-  data.locked = data.locked.map((item) => item === 'Aug 5-9: Residence Inn Portland Airport at Cascade Station'
-    ? 'Aug 5-10: Residence Inn Portland Airport at Cascade Station'
-    : item);
+  const statReplacements = new Map([
+    ['Locked Redding Hotel', ['Locked Eureka Hotel', 'Home2 Suites by Hilton Eureka']],
+    ['Locked Jacksonville Hotel', ['Locked Bandon Stay', 'Lamplighter Inn - 109 Seahorse Reef']]
+  ]);
+  data.stats = data.stats.map((stat) => {
+    const replacement = statReplacements.get(stat.label);
+    return replacement ? { label: replacement[0], value: replacement[1] } : stat;
+  });
+
+  data.locked = data.locked
+    .filter((item) => !item.includes('Thunderbird Lodge') && !item.includes('Wine Country Inn'))
+    .map((item) => item === 'Aug 5-9: Residence Inn Portland Airport at Cascade Station'
+      ? 'Aug 5-10: Residence Inn Portland Airport at Cascade Station'
+      : item);
 
   const pharmacyLocked = 'Aug 3 at 9:30 AM: KP Pharmacy in Santa Cruz';
   if (!data.locked.includes(pharmacyLocked)) {
@@ -190,22 +203,68 @@ function applyTripOverrides(data) {
     data.locked.splice(seawayIndex >= 0 ? seawayIndex + 1 : data.locked.length, 0, pharmacyLocked);
   }
 
+  const coastalLocked = [
+    'Aug 3-4: Home2 Suites by Hilton Eureka',
+    'Aug 4-5: Lamplighter Inn - 109 Seahorse Reef in Bandon'
+  ];
+  coastalLocked.forEach((item, offset) => {
+    if (!data.locked.includes(item)) {
+      const pharmacyIndex = data.locked.indexOf(pharmacyLocked);
+      data.locked.splice(pharmacyIndex >= 0 ? pharmacyIndex + 1 + offset : data.locked.length, 0, item);
+    }
+  });
+
   const santaCruz = data.route.find((stop) => stop.label === 'Seaway Inn, Santa Cruz');
   if (santaCruz) {
-    santaCruz.note = 'Locked beachfront stay at Seaway Inn. Check in Aug 2 and check out Aug 3, then stop at KP Pharmacy at 9:30 AM before departing for Redding.';
+    santaCruz.note = 'Locked beachfront stay at Seaway Inn. Check out Aug 3, stop at KP Pharmacy at 9:30 AM, then take US-101 north to Eureka.';
     santaCruz.appointments = [{
       name: 'KP Pharmacy — Pick up meds',
       time: 'Monday, Aug 3 at 9:30 AM',
       address: '110 Cooper St, Suite 500, Floor 2, Room 22R03, Santa Cruz, CA 95060',
-      details: 'Scheduled pharmacy stop before the drive to Redding.'
+      details: 'Scheduled pharmacy stop before the coastal drive to Eureka.'
     }];
+  }
+
+  const reddingIndex = data.route.findIndex((stop) => stop.label === 'Thunderbird Lodge, Redding');
+  if (reddingIndex >= 0) {
+    data.route[reddingIndex] = {
+      label: 'Home2 Suites by Hilton Eureka',
+      mapsQuery: 'Home2 Suites by Hilton Eureka, 2112 Broadway, Eureka, CA 95501',
+      date: 'Mon Aug 3-Tue Aug 4',
+      drive: 'About 6.0-7.5 hr plus stops',
+      overnight: 'Home2 Suites by Hilton Eureka',
+      headline: '1 locked night in Eureka',
+      coords: [40.7887535, -124.1809190],
+      color: 'green',
+      note: 'Locked coastal pivot replacing the inland Redding leg. Take US-101 north; check-in is 4:30 PM Aug 3 and checkout is 11:00 AM Aug 4.',
+      hotelName: 'Home2 Suites by Hilton Eureka',
+      locked: true
+    };
+  }
+
+  const jacksonvilleIndex = data.route.findIndex((stop) => stop.label === 'Wine Country Inn, Jacksonville');
+  if (jacksonvilleIndex >= 0) {
+    data.route[jacksonvilleIndex] = {
+      label: 'Lamplighter Inn - 109 Seahorse Reef, Bandon',
+      mapsQuery: 'Lamplighter Inn - 109 Seahorse Reef, 40 North Ave SE Unit 109, Bandon, OR 97411',
+      date: 'Tue Aug 4-Wed Aug 5',
+      drive: 'About 4.0-5.0 hr plus stops',
+      overnight: 'Lamplighter Inn - 109 Seahorse Reef',
+      headline: '1 locked night in Bandon',
+      coords: [43.120047, -124.39815],
+      color: 'green',
+      note: 'Locked coastal overnight on US-101. Check-in is from 4:00 PM Aug 4 and checkout is by 10:00 AM Aug 5. Complete the Guest Portal and rental agreement before arrival; access instructions are sent one day before check-in.',
+      hotelName: 'Lamplighter Inn - 109 Seahorse Reef',
+      locked: true
+    };
   }
 
   const portland = data.route.find((stop) => stop.label === 'Residence Inn Portland Airport at Cascade Station');
   if (portland) {
     portland.date = 'Wed Aug 5-Mon Aug 10';
+    portland.drive = 'About 4.5-5.5 hr plus stops';
     portland.headline = '5 locked nights in Portland';
-    portland.note = 'Locked five-night Portland base near Cascade Station and SE 109th. Check in Aug 5 at 4:00 PM; check out Aug 10.';
+    portland.note = 'Locked five-night Portland base near Cascade Station and SE 109th. Drive inland from Bandon toward I-5; check in Aug 5 at 4:00 PM and check out Aug 10.';
   }
 
   const seattle = data.route.find((stop) => stop.label === 'Seattle / Northgate');
@@ -214,6 +273,45 @@ function applyTripOverrides(data) {
     seattle.overnight = 'One night in Northgate';
     seattle.headline = '1 night in Seattle / Northgate';
     seattle.note = 'One-night Seattle stay in the Northgate area. Hotel not yet locked.';
+  }
+
+  data.hotels = data.hotels.filter((hotel) => !['Redding', 'Jacksonville'].includes(hotel.zone));
+
+  const home2 = {
+    zone: 'Eureka',
+    name: 'Home2 Suites by Hilton Eureka',
+    role: 'LOCKED - Aug 3-4 Eureka stay',
+    phone: '707-442-2949',
+    address: '2112 Broadway, Eureka, CA 95501',
+    url: 'https://www.hilton.com/en/hotels/acverht-home2-suites-eureka/',
+    itinerary: '82576336',
+    checkIn: 'Aug 3, 4:30 PM',
+    checkOut: 'Aug 4, 11:00 AM',
+    dog: '$75 non-refundable pet fee for a 1-4 night stay; up to 2 dogs or cats, 50 lb maximum each. Confirm the dog is attached to the reservation.',
+    parking: 'Complimentary on-site self-parking. Parking is not secured or covered; EV charging is available.',
+    why: 'Confirmed 1 King Bed Studio Suite. Bring passports, immigration paperwork, medications, electronics, and other irreplaceable items into the room.',
+    locked: true
+  };
+
+  const lamplighter = {
+    zone: 'Bandon',
+    name: 'Lamplighter Inn - 109 Seahorse Reef',
+    role: 'LOCKED - Aug 4-5 Bandon stay',
+    phone: '503-345-9399',
+    address: '40 North Ave SE, Unit 109, Bandon, OR 97411',
+    url: 'https://www.booking.com/hotel/us/lamplighter-inn-109-seahorse-reef.html',
+    itinerary: '6502249790',
+    checkIn: 'Aug 4, from 4:00 PM',
+    checkOut: 'Aug 5, by 10:00 AM',
+    dog: 'Pets are allowed on request; the Unit 109 listing permits dogs. Confirm the dog approval and any applicable charge in the Guest Portal.',
+    parking: 'Free parking for 1 vehicle is listed for Unit 109.',
+    why: 'Complete the Guest Portal and required rental agreement before arrival. Access instructions are sent Aug 3. The unit has no air-conditioning; a box fan is provided.',
+    locked: true
+  };
+
+  if (!data.hotels.some((hotel) => hotel.name === home2.name)) {
+    const portlandHotelIndex = data.hotels.findIndex((hotel) => hotel.zone === 'Portland');
+    data.hotels.splice(portlandHotelIndex >= 0 ? portlandHotelIndex : data.hotels.length, 0, home2, lamplighter);
   }
 
   const portlandHotel = data.hotels.find((hotel) => hotel.zone === 'Portland');
