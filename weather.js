@@ -98,7 +98,8 @@ async function fetchForecast(stop) {
 }
 
 async function addLiveWeather() {
-  const data = await fetch('./data.json').then((response) => response.json());
+  const rawData = await fetch('./data.json').then((response) => response.json());
+  const data = typeof applyTripOverrides === 'function' ? applyTripOverrides(rawData) : rawData;
   const cards = [...document.querySelectorAll('#route-list > article.card')];
 
   await Promise.all(data.route.map(async (stop, index) => {
