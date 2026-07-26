@@ -97,14 +97,34 @@ async function fetchForecast(stop) {
   };
 }
 
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+async function waitForRouteCards(expectedCount, timeoutMs = 10000) {
+  const deadline = Date.now() + timeoutMs;
+
+  while (Date.now() < deadline) {
+    const cards = [...document.querySelectorAll('#route-list > article.card')];
+    if (cards.length >= expectedCount) return cards;
+    await sleep(100);
+  }
+
+  return [...document.querySelectorAll('#route-list > article.card')];
+}
+
 async function addLiveWeather() {
   const rawData = await fetch('./data.json').then((response) => response.json());
   const data = typeof applyTripOverrides === 'function' ? applyTripOverrides(rawData) : rawData;
-  const cards = [...document.querySelectorAll('#route-list > article.card')];
+  const cards = await waitForRouteCards(data.route.length);
+
+  if (cards.length < data.route.length) {
+    throw new Error(`Route cards did not finish rendering (${cards.length}/${data.route.length})`);
+  }
 
   await Promise.all(data.route.map(async (stop, index) => {
     const card = cards[index];
     if (!card) return;
+
+    card.querySelector(':scope > .weather-slot')?.remove();
 
     const placeholder = document.createElement('div');
     placeholder.className = 'weather-slot';
@@ -122,6 +142,14 @@ async function addLiveWeather() {
   }));
 }
 
-window.addEventListener('load', () => {
-  setTimeout(() => addLiveWeather().catch(console.error), 0);
-});
+function startLiveWeather() {
+  addLiveWeather().catch((error) => {
+    console.error('Live weather failed to initialize', error);
+  });
+}
+
+if (document.readyState === 'complete') {
+  setTimeout(startLiveWeather, 0);
+} else {
+  window.addEventListener('load', () => setTimeout(startLiveWeather, 0), { once: true });
+}
