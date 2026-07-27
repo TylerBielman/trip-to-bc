@@ -13,7 +13,7 @@
     checkOut: 'Aug 12, 11:00 AM',
     dog: 'One dog is included on the reservation. Pet fee: $30 USD.',
     parking: 'Main-building parking is first-come, first-served. A 24-hour free public lot and street parking are within walking distance. Hotel parking is at your own risk.',
-    why: 'Ground-floor queen guest room for Tyler and Stephanie. Total and balance due: $295.47 USD. Changes or cancellations must be made by 3:00 PM at least 72 hours before arrival.',
+    why: 'A1 ground-floor queen guest room for Tyler and Stephanie. Room: $235.00 USD; total and balance due: $295.47 USD. Changes or cancellations must be made by 3:00 PM at least 72 hours before arrival.',
     locked: true,
     links: [
       { label: 'Email Hotel', url: 'mailto:frontdesk@theswanhotel.com' }
@@ -29,7 +29,7 @@
       portTownsend.drive = 'About 1 hr 5 min from Kingston after unloading; target arrival around 4:00–4:20 PM';
       portTownsend.overnight = swan.name;
       portTownsend.headline = '1 locked night at The Swan Hotel';
-      portTownsend.note = 'Confirmed ground-floor queen room for Aug 11–12, with one dog. Check in from 3:00 PM and check out by 11:00 AM, then leave for Port Angeles by 9:45 AM for the confirmed Coho sailing.';
+      portTownsend.note = 'Confirmed A1 ground-floor queen room for Aug 11–12, with one dog. Check in from 3:00 PM and check out by 11:00 AM, then leave for Port Angeles by 9:45 AM for the confirmed Coho sailing.';
       portTownsend.hotelName = swan.name;
       portTownsend.locked = true;
     }
@@ -72,62 +72,15 @@
     }
   };
 
-  function addSwanDetails() {
-    const cards = [...document.querySelectorAll('#route-list > .card')];
-    const card = cards.find((item) => item.textContent.includes('The Swan Hotel'));
-    if (!card) return false;
-
-    if (!card.querySelector('[data-swan-confirmation]')) {
-      const panel = document.createElement('div');
-      panel.className = 'panel locked reservation-block';
-      panel.dataset.swanConfirmation = 'true';
-      panel.innerHTML = `
-        <p class="eyebrow">Confirmed lodging between ferries</p>
-        <h3>Tuesday, Aug 11 — The Swan Hotel</h3>
-        <div class="facts">
-          <div class="fact"><b>Confirmation</b><span>52526708</span></div>
-          <div class="fact"><b>Address</b><span>222 Monroe St, Port Townsend, WA 98368</span></div>
-          <div class="fact"><b>Room</b><span>A1 — Ground Floor Queen Guest Room.</span></div>
-          <div class="fact"><b>Guests</b><span>Tyler Bielman and Stephanie Bogaert; one room for one night.</span></div>
-          <div class="fact"><b>Check-in</b><span>Tuesday, Aug 11 at 3:00 PM.</span></div>
-          <div class="fact"><b>Check-out</b><span>Wednesday, Aug 12 by 11:00 AM.</span></div>
-          <div class="fact"><b>Dog</b><span>One dog is registered. Pet fee: $30 USD.</span></div>
-          <div class="fact"><b>Room cost</b><span>$235.00 USD.</span></div>
-          <div class="fact"><b>Total / balance due</b><span>$295.47 USD.</span></div>
-          <div class="fact"><b>Parking</b><span>Main-building spaces are first-come, first-served. A 24-hour free public lot and street parking are available within walking distance. Hotel parking is at your own risk.</span></div>
-          <div class="fact"><b>Cancellation</b><span>Changes or cancellations must be made by 3:00 PM at least 72 hours before the scheduled arrival or change date.</span></div>
-          <div class="fact"><b>Morning plan</b><span>Leave Port Townsend by 9:45 AM for an 11:00–11:15 AM arrival at the Port Angeles ferry terminal.</span></div>
-        </div>
-        <div class="actions">
-          <a href="https://theswanhotel.com/" target="_blank" rel="noreferrer">Hotel Website</a>
-          <a href="tel:+13603851718">Call 360-385-1718</a>
-          <a href="mailto:frontdesk@theswanhotel.com">Email Hotel</a>
-        </div>`;
-
-      const actionRow = card.querySelector(':scope > .actions');
-      card.insertBefore(panel, actionRow || null);
-    }
-
-    const lockedList = document.querySelector('#locked-list');
-    if (lockedList) {
-      let item = [...lockedList.children].find((entry) => entry.textContent.includes('The Swan Hotel'));
-      if (!item) {
-        item = document.createElement('li');
-        item.textContent = 'Aug 11-12: The Swan Hotel in Port Townsend — confirmation 52526708';
-        lockedList.appendChild(item);
-      }
-      const ferryItem = [...lockedList.children].find((entry) => entry.textContent.includes('Edmonds–Kingston ferry'));
-      if (ferryItem && item.previousElementSibling !== ferryItem) ferryItem.insertAdjacentElement('afterend', item);
-    }
-
-    const footer = document.querySelector('#footer');
-    if (footer) footer.textContent = 'Version 4.5 | All lodging and ferry legs are now confirmed and documented. Updated 2026-07-27.';
-    return true;
-  }
-
   let attempts = 0;
   const timer = setInterval(() => {
     attempts += 1;
-    if (addSwanDetails() || attempts > 50) clearInterval(timer);
+    const footer = document.querySelector('#footer');
+    if (footer) {
+      footer.textContent = 'Version 4.5 | All lodging and ferry legs are now confirmed and documented. Updated 2026-07-27.';
+      clearInterval(timer);
+    } else if (attempts > 50) {
+      clearInterval(timer);
+    }
   }, 100);
 })();
